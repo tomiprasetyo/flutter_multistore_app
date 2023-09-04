@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_multistore_app/bloc/login/login_bloc.dart';
+import 'package:flutter_multistore_app/data/datasources/auth_local_datasource.dart';
+import 'package:flutter_multistore_app/data/model/request/login_request_model.dart';
 import 'package:flutter_multistore_app/pages/base_widgets/button/custom_button.dart';
 import 'package:flutter_multistore_app/pages/base_widgets/text_field/custom_password_textfield.dart';
 import 'package:flutter_multistore_app/pages/base_widgets/text_field/custom_textfield.dart';
@@ -58,7 +62,13 @@ class SignInWidgetState extends State<SignInWidget> {
             backgroundColor: Colors.red,
           ),
         );
-      } else {}
+      } else {
+        final model = LoginRequestModel(
+          email: email,
+          password: password,
+        );
+        context.read<LoginBloc>().add(LoginEvent.login(model));
+      }
     }
   }
 
@@ -138,9 +148,41 @@ class SignInWidgetState extends State<SignInWidget> {
                 bottom: 20,
                 top: 30,
               ),
-              child: CustomButton(
-                onTap: loginUser,
-                buttonText: 'Sign In',
+              child: BlocConsumer<LoginBloc, LoginState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    orElse: () {},
+                    loaded: (data) async {
+                      await AuthLocalDatasource().saveAuthData(data);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return const DashboardPage();
+                        }),
+                        (route) => false,
+                      );
+                    },
+                    error: (message) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(message),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
+                },
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    orElse: () {
+                      return CustomButton(
+                          onTap: loginUser, buttonText: 'Sign In');
+                    },
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(

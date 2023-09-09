@@ -47,7 +47,7 @@ class CategoryWidget extends StatelessWidget {
                     //   ),
                     // );
                   },
-                  child: CategoryItemWiget(
+                  child: CategoryItemWidget(
                     category: model.data![index],
                   ),
                 );

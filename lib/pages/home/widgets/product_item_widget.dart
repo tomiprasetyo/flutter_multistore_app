@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multistore_app/data/model/products_response_model.dart';
 import 'package:flutter_multistore_app/pages/base_widgets/rating_bar.dart';
+import 'package:flutter_multistore_app/pages/product/product_detail.dart';
 import 'package:flutter_multistore_app/utils/color_resources.dart';
 import 'package:flutter_multistore_app/utils/custom_themes.dart';
 import 'package:flutter_multistore_app/utils/dimensions.dart';
 import 'package:flutter_multistore_app/utils/images.dart';
+import 'package:flutter_multistore_app/utils/price_ext.dart';
 
 class ProductItemWidget extends StatelessWidget {
   final Product product;
@@ -17,9 +19,16 @@ class ProductItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //   return const ProductDetail();
-        // }));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ProductDetail(
+                product: product,
+              );
+            },
+          ),
+        );
       },
       child: Container(
         height: Dimensions.cardHeight,
@@ -118,7 +127,7 @@ class ProductItemWidget extends StatelessWidget {
                           height: 2,
                         ),
                         Text(
-                          '${product.price}',
+                          '${product.price}'.formatPrice(),
                           style: titilliumSemiBold.copyWith(
                             color: ColorResources.getPrimary(context),
                           ),

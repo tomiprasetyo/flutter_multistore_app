@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multistore_app/bloc/logout/logout_bloc.dart';
 import 'package:flutter_multistore_app/data/datasources/auth_local_datasource.dart';
 import 'package:flutter_multistore_app/pages/auth/auth_page.dart';
+import 'package:flutter_multistore_app/pages/home/home_page.dart';
 import 'package:flutter_multistore_app/utils/images.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -33,13 +34,7 @@ class _HomePageState extends State<DashboardPage> {
     });
 
     _screens = [
-      const Center(
-        child: Column(
-          children: [
-            Text('Home'),
-          ],
-        ),
-      ),
+      const HomePage(),
       const Center(
         child: Text('Order'),
       ),
@@ -79,7 +74,9 @@ class _HomePageState extends State<DashboardPage> {
               orElse: () {
                 return ElevatedButton(
                   onPressed: () {
-                    context.read<LogoutBloc>().add(const LogoutEvent.logout());
+                    context.read<LogoutBloc>().add(
+                          const LogoutEvent.logout(),
+                        );
                   },
                   child: const Text('Logout'),
                 );
@@ -152,7 +149,9 @@ class _HomePageState extends State<DashboardPage> {
     list.add(
       _barItem(Images.shoppingImage, 'Orders', 1),
     );
-    list.add(_barItem(Images.moreImage, 'More', 2));
+    list.add(
+      _barItem(Images.moreImage, 'More', 2),
+    );
     return list;
   }
 }
